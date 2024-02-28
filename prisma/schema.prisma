@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model account_info {
+  id    String  @default(uuid()) @unique
+  created_at DateTime @default(now())
+  updated_at  DateTime @default(now())
+  firstname String
+  lastname String
+  email String @unique
+  is_email_verified Boolean
+  is_enable Boolean
+}
+
+model account_wallet {
+  id    String  @default(uuid()) @unique
+  created_at DateTime @default(now())
+  updated_at  DateTime @default(now())
+  account_id String 
+  wallet_address String @unique
+  blockchain  BLOCKCHAIN
+}
+
+model account_session {
+  id    String  @default(uuid()) @unique
+  created_at DateTime @default(now())
+  updated_at  DateTime @default(now())
+  account_id String
+}
+
+enum BLOCKCHAIN {
+  SOLANA
+  CARDANO
+  ALEO
+}
