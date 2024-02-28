@@ -10,31 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model account_info {
-  id    String  @default(uuid()) @unique
-  created_at DateTime @default(now())
-  updated_at  DateTime @default(now())
-  firstname String
-  lastname String
-  email String @unique
-  is_email_verified Boolean
-  is_enable Boolean
+model accountInfo {
+  id              String   @unique @default(uuid())
+  createdAt       DateTime @default(now()) @map(name: "created_at")
+  updatedAt       DateTime @default(now()) @map(name: "updated_at")
+  firstname       String
+  lastname        String
+  email           String   @unique
+  isEmailVerified Boolean  @map(name: "is_email_verified")
+  isEnable        Boolean  @map(name: "is_enable")
+
+  @@map(name: "account_info")
 }
 
-model account_wallet {
-  id    String  @default(uuid()) @unique
-  created_at DateTime @default(now())
-  updated_at  DateTime @default(now())
-  account_id String 
-  wallet_address String @unique
-  blockchain  BLOCKCHAIN
+model accountWallet {
+  id            String     @unique @default(uuid())
+  createdAt     DateTime   @default(now()) @map(name: "created_at")
+  updatedAt     DateTime   @default(now()) @map(name: "updated_at")
+  accountId     String     @map(name: "account_id")
+  walletAddress String     @unique
+  blockchain    BLOCKCHAIN
+
+  @@map(name: "account_wallet")
 }
 
-model account_session {
-  id    String  @default(uuid()) @unique
-  created_at DateTime @default(now())
-  updated_at  DateTime @default(now())
-  account_id String
+model accountSession {
+  id        String   @unique @default(uuid())
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  accountId String   @map(name: "account_id")
+
+  @@map(name: "account_session")
 }
 
 enum BLOCKCHAIN {

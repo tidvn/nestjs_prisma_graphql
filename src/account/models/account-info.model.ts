@@ -1,8 +1,5 @@
 import 'reflect-metadata';
-import {
-  ObjectType,
-  Field,
-} from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { IsEmail } from 'class-validator';
 import { AbstractModel } from 'src/common/models/abstract.model';
 
