@@ -172,7 +172,7 @@ export class AuthService {
       },
     });
 
-    const newAccountWallet = await this.prisma.accountWallet.create({
+    await this.prisma.accountWallet.create({
       data: {
         walletAddress: walletAddress,
         accountId: newAccountInfo.id,
