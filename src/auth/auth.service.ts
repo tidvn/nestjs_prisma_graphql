@@ -19,7 +19,7 @@ import { AccountInfo } from 'src/account/models/account-info.model';
 import { Token } from './models/token.model';
 import { RequestOTPInput } from './dto/request-otp.input';
 import { MailSenderService } from 'src/mail-sender/mail-sender.service';
-import { SignupInput } from './dto/signup.input';
+import { RegisterInput } from './dto/register.input';
 
 @Injectable()
 export class AuthService {
@@ -32,8 +32,7 @@ export class AuthService {
     private cacheManager: Cache,
   ) {}
 
-  async getNonce(payload: { walletAddress: string }): Promise<NonceResponse> {
-    const { walletAddress } = payload;
+  async getNonce(walletAddress: string): Promise<NonceResponse> {
     const accountWallet = await this.prisma.accountWallet.findUnique({
       where: { id: walletAddress },
     });
@@ -122,7 +121,7 @@ export class AuthService {
     return true;
   }
 
-  async register(payload: SignupInput): Promise<Token> {
+  async register(payload: RegisterInput): Promise<Token> {
     const { walletAddress, email, signature, blockchain } = payload;
 
     const otp: string = await this.cacheManager.get(
@@ -133,7 +132,7 @@ export class AuthService {
       throw new BadRequestException('OTP is expired or invalid.');
     }
 
-    const verified = verifyMessage(blockchain, email, signature, otp);
+    const verified = verifyMessage(blockchain, otp, signature, walletAddress);
 
     if (!verified) {
       throw new BadRequestException('Cannot verify signature');
@@ -180,10 +179,57 @@ export class AuthService {
       },
     });
 
-    const session = await this.saveAccountSession(accountInfo);
+    const newSession = await this.saveAccountSession(newAccountInfo);
     await this.cacheManager.del(`nonce-${walletAddress}`);
 
-    return this.generateTokens(accountInfo, session);
+    return this.generateTokens(newAccountInfo, newSession);
+  }
+
+  async logout(account: AccountInfo) {
+    const accountSession = await this.prisma.accountSession.findFirst({
+      where: {
+        accountId: account.id,
+      },
+    });
+    if (!isNil(accountSession)) {
+      await this.prisma.accountSession.delete({
+        where: {
+          id: accountSession.id,
+        },
+      });
+    }
+  }
+
+  async refreshToken(refreshToken: string): Promise<Token> {
+    const decoded = this.jwtService.verify(refreshToken, {
+      secret: this.configService.get<string>('auth.jwt.refresh_secret'),
+    });
+
+    if (isNil(decoded) || isNil(decoded.session_id) || isNil(decoded.sub)) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const accountSession = await this.prisma.accountSession.findFirst({
+      where: {
+        id: decoded.session_id,
+      },
+    });
+
+    if (isNil(accountSession)) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const account = await this.prisma.accountInfo.findFirst({
+      where: {
+        id: decoded.sub,
+      },
+    });
+
+    if (isNil(account)) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    return this.generateTokens(account, accountSession);
   }
 
   private async saveAccountSession(

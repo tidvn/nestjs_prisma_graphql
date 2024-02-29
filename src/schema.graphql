@@ -14,9 +14,12 @@ input LoginInput {
 }
 
 type Mutation {
-  getNonce(data: RequestNonceInput!): NonceResponse!
-  login(data: LoginInput!): Token!
-  requestEmailOTP(data: RequestOTPInput!): Boolean!
+  getNonce(walletAddress: String!): NonceResponse!
+  login(input: LoginInput!): Token!
+  logout: StatusResponse!
+  refreshToken(token: JWT!): Token!
+  register(input: RegisterInput!): Token!
+  requestEmailOTP(input: RequestOTPInput!): StatusResponse!
 }
 
 type NonceResponse {
@@ -30,13 +33,21 @@ type Query {
   helloWorld: String!
 }
 
-input RequestNonceInput {
+input RegisterInput {
+  blockchain: String!
+  email: String!
+  signature: String!
   walletAddress: String!
 }
 
 input RequestOTPInput {
   email: String!
   walletAddress: String!
+}
+
+type StatusResponse {
+  message: String!
+  success: Boolean!
 }
 
 type Token {

@@ -20,4 +20,7 @@ export class AccountInfo extends BaseModel {
 
   @Field(() => Boolean)
   isEnable?: boolean;
+
+  @Field(() => String, { nullable: true })
+  sessionId?: string;
 }

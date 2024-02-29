@@ -1,7 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, ArgsType } from '@nestjs/graphql';
 
-@InputType()
+@ArgsType()
 export class RequestNonceInput {
   @Field()
   @IsNotEmpty()

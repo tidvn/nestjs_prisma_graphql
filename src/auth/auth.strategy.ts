@@ -21,20 +21,3 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
     };
   }
 }
-
-@Injectable()
-export class ResfreshTokenStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-refresh',
-) {
-  constructor(readonly configService: ConfigService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get<string>('auth.jwt.refresh_secret'),
-    });
-  }
-
-  validate(payload: any) {
-    return { id: payload.sub, sessionId: payload.session_id };
-  }
-}

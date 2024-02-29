@@ -14,8 +14,8 @@ model accountInfo {
   id              String           @unique @default(uuid())
   createdAt       DateTime         @default(now()) @map(name: "created_at")
   updatedAt       DateTime         @default(now()) @map(name: "updated_at")
-  firstname       String
-  lastname        String
+  firstname       String?
+  lastname        String?
   email           String           @unique
   isEmailVerified Boolean          @map(name: "is_email_verified")
   isEnable        Boolean          @map(name: "is_enable")

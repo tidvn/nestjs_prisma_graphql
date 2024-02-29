@@ -4,7 +4,7 @@ import { RequestOTPInput } from './request-otp.input';
 import { Blockchain } from '@prisma/client';
 
 @InputType()
-export class SignupInput extends RequestOTPInput {
+export class RegisterInput extends RequestOTPInput {
   @Field()
   @IsNotEmpty()
   blockchain: Blockchain;

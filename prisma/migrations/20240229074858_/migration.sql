@@ -1,13 +1,13 @@
 -- CreateEnum
-CREATE TYPE "Blockchain" AS ENUM ('SOLANA', 'ETHEREUM', 'CARDANO', 'INJECTIVE', 'SUI');
+CREATE TYPE "Blockchain" AS ENUM ('solana', 'ethereum', 'cardano', 'injective', 'sui');
 
 -- CreateTable
 CREATE TABLE "account_info" (
     "id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "firstname" TEXT NOT NULL,
-    "lastname" TEXT NOT NULL,
+    "firstname" TEXT,
+    "lastname" TEXT,
     "email" TEXT NOT NULL,
     "is_email_verified" BOOLEAN NOT NULL,
     "is_enable" BOOLEAN NOT NULL

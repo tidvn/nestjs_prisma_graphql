@@ -11,7 +11,7 @@ export const verifyMessage = (
 ): boolean => {
   let result = false;
   switch (blockchain) {
-    case Blockchain.SOLANA:
+    case Blockchain.solana:
       result = nacl.sign.detached.verify(
         new TextEncoder().encode(message),
         bs58.decode(signature),
