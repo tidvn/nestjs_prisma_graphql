@@ -20,6 +20,7 @@ import { Token } from './models/token.model';
 import { RequestOTPInput } from './dto/request-otp.input';
 import { MailSenderService } from 'src/mail-sender/mail-sender.service';
 import { RegisterInput } from './dto/register.input';
+import { AccountRequest } from './models/account-request.model';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
     private readonly mailSenderService: MailSenderService,
     @Inject(CACHE_MANAGER)
     private cacheManager: Cache,
-  ) {}
+  ) { }
 
   async getNonce(walletAddress: string): Promise<NonceResponse> {
     const accountWallet = await this.prisma.accountWallet.findUnique({
@@ -185,7 +186,7 @@ export class AuthService {
     return this.generateTokens(newAccountInfo, newSession);
   }
 
-  async logout(account: AccountInfo) {
+  async logout(account: AccountRequest) {
     const accountSession = await this.prisma.accountSession.findFirst({
       where: {
         accountId: account.id,

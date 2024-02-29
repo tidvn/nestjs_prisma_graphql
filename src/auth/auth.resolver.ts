@@ -12,9 +12,10 @@ import { AccountEntity } from 'src/common/decorators/account.decorator';
 import { AccountInfo } from 'src/account/models/account-info.model';
 import { StatusResponse } from './models/status.model';
 import { RefreshTokenInput } from './dto/refresh-token.input';
+import { AccountRequest } from './models/account-request.model';
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Mutation(() => NonceResponse)
   async getNonce(
@@ -43,7 +44,7 @@ export class AuthResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => StatusResponse)
-  async logout(@AccountEntity() account: AccountInfo): Promise<StatusResponse> {
+  async logout(@AccountEntity() account: AccountRequest): Promise<StatusResponse> {
     await this.authService.logout(account);
     return { success: true, message: 'Logout successfully' };
   }

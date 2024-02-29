@@ -12,6 +12,8 @@ import authConfig from './common/configs/auth.config';
 import mailerConfig from './common/configs/mailer.config';
 import { AuthModule } from './auth/auth.module';
 import { MailSenderModule } from './mail-sender/mail-sender.module';
+import { APP_FILTER } from '@nestjs/core';
+import { GraphqlErrorFilter } from './common/filters/graphql-exception.filter';
 
 @Module({
   imports: [
@@ -43,6 +45,10 @@ import { MailSenderModule } from './mail-sender/mail-sender.module';
     // PostsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [AppService, AppResolver,
+    {
+      provide: APP_FILTER,
+      useClass: GraphqlErrorFilter,
+    },],
 })
-export class AppModule {}
+export class AppModule { }
