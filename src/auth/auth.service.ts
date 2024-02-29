@@ -31,7 +31,7 @@ export class AuthService {
     private readonly mailSenderService: MailSenderService,
     @Inject(CACHE_MANAGER)
     private cacheManager: Cache,
-  ) { }
+  ) {}
 
   async getNonce(walletAddress: string): Promise<NonceResponse> {
     const accountWallet = await this.prisma.accountWallet.findUnique({

@@ -1,17 +1,16 @@
 import {
   ArgumentsHost,
   Catch,
-  ConflictException,
   HttpException,
   HttpStatus,
-} from "@nestjs/common";
-import { GqlArgumentsHost, GqlExceptionFilter } from "@nestjs/graphql";
+} from '@nestjs/common';
+import { GqlArgumentsHost, GqlExceptionFilter } from '@nestjs/graphql';
 
 @Catch()
 export class GraphqlErrorFilter implements GqlExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const gqlHost = GqlArgumentsHost.create(host);
-    const ctx = gqlHost.getContext();
+    // const ctx = gqlHost.getContext();
 
     const inferredDatabaseError = this.inferDatabaseError(exception);
 
@@ -19,7 +18,7 @@ export class GraphqlErrorFilter implements GqlExceptionFilter {
       message:
         inferredDatabaseError?.message ||
         exception.message ||
-        "Internal server error",
+        'Internal server error',
     };
 
     const status =
@@ -31,7 +30,7 @@ export class GraphqlErrorFilter implements GqlExceptionFilter {
 
   inferDatabaseError(exception: any) {
     if (exception.code === 11000) {
-      return { message: "you are already in a match", status: 409 }; // Use NestJS's built-in ConflictException to handle 409 conflict status
+      return { message: 'you are already in a match', status: 409 }; // Use NestJS's built-in ConflictException to handle 409 conflict status
     }
 
     return null;

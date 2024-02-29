@@ -45,10 +45,13 @@ import { GraphqlErrorFilter } from './common/filters/graphql-exception.filter';
     // PostsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver,
+  providers: [
+    AppService,
+    AppResolver,
     {
       provide: APP_FILTER,
       useClass: GraphqlErrorFilter,
-    },],
+    },
+  ],
 })
-export class AppModule { }
+export class AppModule {}
