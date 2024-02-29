@@ -1,52 +1,29 @@
-import {
-  Resolver,
-  Mutation,
-  Args,
-  Parent,
-  ResolveField,
-} from '@nestjs/graphql';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { Auth } from './models/auth.model';
+import { NonceResponse } from './models/nonce.model';
+import { RequestNonceInput } from './dto/request-nonce.input';
 import { Token } from './models/token.model';
 import { LoginInput } from './dto/login.input';
-import { SignupInput } from './dto/signup.input';
-import { RefreshTokenInput } from './dto/refresh-token.input';
-import { User } from '../users/models/user.model';
-
-@Resolver(() => Auth)
+import { RequestOTPInput } from './dto/request-otp.input';
+@Resolver()
 export class AuthResolver {
-  constructor(private readonly auth: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => Auth)
-  async signup(@Args('data') data: SignupInput) {
-    data.email = data.email.toLowerCase();
-    const { accessToken, refreshToken } = await this.auth.createUser(data);
-    return {
-      accessToken,
-      refreshToken,
-    };
-  }
-
-  @Mutation(() => Auth)
-  async login(@Args('data') { email, password }: LoginInput) {
-    const { accessToken, refreshToken } = await this.auth.login(
-      email.toLowerCase(),
-      password,
-    );
-
-    return {
-      accessToken,
-      refreshToken,
-    };
+  @Mutation(() => NonceResponse)
+  async getNonce(
+    @Args('data') data: RequestNonceInput,
+  ): Promise<NonceResponse> {
+    return await this.authService.getNonce(data);
   }
 
   @Mutation(() => Token)
-  async refreshToken(@Args() { token }: RefreshTokenInput) {
-    return this.auth.refreshToken(token);
+  async login(@Args('data') data: LoginInput): Promise<Token> {
+    return await this.authService.login(data);
   }
 
-  @ResolveField('user', () => User)
-  async user(@Parent() auth: Auth) {
-    return await this.auth.getUserFromToken(auth.accessToken);
+  @Mutation(() => Boolean)
+  async requestEmailOTP(@Args('data') data: RequestOTPInput): Promise<boolean> {
+    await this.authService.requestEmailOTP(data);
+    return true;
   }
 }

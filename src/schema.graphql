@@ -1,0 +1,48 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
+"""
+scalar JWT
+
+input LoginInput {
+  blockchain: String!
+  signature: String!
+  walletAddress: String!
+}
+
+type Mutation {
+  getNonce(data: RequestNonceInput!): NonceResponse!
+  login(data: LoginInput!): Token!
+  requestEmailOTP(data: RequestOTPInput!): Boolean!
+}
+
+type NonceResponse {
+  isRegistered: Boolean!
+  nonce: String!
+  walletAddress: String!
+}
+
+type Query {
+  hello(name: String!): String!
+  helloWorld: String!
+}
+
+input RequestNonceInput {
+  walletAddress: String!
+}
+
+input RequestOTPInput {
+  email: String!
+  walletAddress: String!
+}
+
+type Token {
+  """JWT access token"""
+  accessToken: JWT!
+
+  """JWT refresh token"""
+  refreshToken: JWT!
+}

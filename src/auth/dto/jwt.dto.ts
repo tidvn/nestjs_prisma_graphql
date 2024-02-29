@@ -1,11 +1,7 @@
 export interface JwtDto {
-  accountId: string;
-  /**
-   * Issued at
-   */
+  sub: string;
+  email: string;
+  session_id: string;
   iat: number;
-  /**
-   * Expiration time
-   */
   exp: number;
 }

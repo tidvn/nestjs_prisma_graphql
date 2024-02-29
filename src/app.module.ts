@@ -4,19 +4,25 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import config from './common/configs/config';
+import config from './common/configs/app.config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './graphql.service';
 import { AppResolver } from './app.resolver';
+import authConfig from './common/configs/auth.config';
+import mailerConfig from './common/configs/mailer.config';
+import { AuthModule } from './auth/auth.module';
+import { MailSenderModule } from './mail-sender/mail-sender.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config, authConfig, mailerConfig],
+    }),
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
         middlewares: [
-          // configure your prisma middleware
           loggingMiddleware({
             logger: new Logger('PrismaMiddleware'),
             logLevel: 'log',
@@ -30,7 +36,9 @@ import { AppResolver } from './app.resolver';
       useClass: GqlConfigService,
     }),
 
-    // AuthModule,
+    AuthModule,
+
+    MailSenderModule,
     // UsersModule,
     // PostsModule,
   ],

@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { IsEmail } from 'class-validator';
-import { AbstractModel } from 'src/common/models/abstract.model';
+import { BaseModel } from 'src/common/models/base.model';
 
 @ObjectType()
-export class AccountInfo extends AbstractModel {
+export class AccountInfo extends BaseModel {
   @Field()
   @IsEmail()
   email: string;
@@ -16,8 +16,8 @@ export class AccountInfo extends AbstractModel {
   lastname?: string;
 
   @Field(() => Boolean)
-  isEmailVerified?: string;
+  isEmailVerified?: boolean;
 
   @Field(() => Boolean)
-  isEnable?: string;
+  isEnable?: boolean;
 }
